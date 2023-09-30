@@ -1,0 +1,46 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+function AimAtHeads()
+    local AimTarget = nil
+    for _, Player in pairs(Players:GetPlayers()) do
+        if Player ~= LocalPlayer then
+            local Character = Player.Character
+            if Character then
+                local Head = Character:FindFirstChild("Head")
+                if Head then
+                    if AimTarget == nil or Head.Position.Z < AimTarget.Position.Z then
+                        AimTarget = Head
+                    end
+                end
+            end
+        end
+    end
+
+    if AimTarget then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = AimTarget.CFrame
+    end
+end
+
+AimAtHeads()
+
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(Input)
+    if Input.KeyCode == Enum.KeyCode.F11 then
+        AimAtHeads = false
+        for _, Player in pairs(Players:GetPlayers()) do
+            if Player ~= LocalPlayer then
+                local Character = Player.Character
+                if Character then
+                    local Head = Character:FindFirstChild("Head")
+                    if Head then
+                        Head.Anchored = false
+                    end
+                end
+            end
+        end
+    else
+        AimAtHeads = true
+        AimAtHeads()
+    end
+end)
